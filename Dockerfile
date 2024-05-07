@@ -11,7 +11,7 @@ RUN \
   if [ "$version" = "latest" ]; then version=$(curl -s https://api.github.com/repos/jagrosh/MusicBot/releases/latest | grep "tag_name" | cut -d '"' -f 4); fi && \
   wget https://github.com/jagrosh/MusicBot/releases/download/$version/JMusicBot-$version.jar -O /JMusicBot.jar
 
-FROM openjdk:8-jre AS runner
+FROM openjdk:11-jre AS runner
 WORKDIR /data
 
 # make an empty Playlists folder
