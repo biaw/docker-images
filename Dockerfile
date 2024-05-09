@@ -8,8 +8,8 @@ ARG version=latest
 
 # if version is latest then find the latest version on github, then download that version
 RUN \
-  if [ "$version" = "latest" ]; then version=$(curl -s https://api.github.com/repos/jagrosh/MusicBot/releases/latest | grep "tag_name" | cut -d '"' -f 4); fi && \
-  wget https://github.com/jagrosh/MusicBot/releases/download/$version/JMusicBot-$version.jar -O /JMusicBot.jar
+  if [ "$version" = "latest" ]; then version=$(curl -s https://api.github.com/repos/MichailiK/MusicBot/releases/latest | grep "tag_name" | cut -d '"' -f 4); fi && \
+  wget https://github.com/MichailiK/MusicBot/releases/download/$version/JMusicBot-$version.jar -O /JMusicBot.jar
 
 FROM openjdk:11-jre AS runner
 WORKDIR /data
