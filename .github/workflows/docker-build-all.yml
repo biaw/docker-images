@@ -21,7 +21,13 @@ jobs:
         id: get-branch-names
         run: |
           git fetch --all --prune --tags
-          echo "::set-output name=branch-names::$(git branch -r --format='%(refname:short)' | grep -v '^origin/' | grep -v HEAD | grep -v main | sed 's#^[^/]*/##' | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=branch-names::$(git branch -r --format='%(refname:short)' \
+            | sed 's#^[^/]*/##' \
+            | grep -v -x 'origin' \
+            | grep -v -x 'HEAD' \
+            | grep -v -x 'main' \
+            | sort -u \
+            | jq -R -s -c 'split(\"\\n\")[:-1]')"
 
   build-docker-image:
     name: ghcr.io/biaw/${{ matrix.branch }}
