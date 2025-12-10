@@ -4,15 +4,15 @@ FROM alpine AS builder
 RUN apk add --no-cache curl
 
 # specific version
-ARG version=latest
-ARG owner=jagrosh
+ARG version="0.4.3-fixed"
+ARG owner=noxianwill
 
 # if version is latest then find the latest version on github, then download that version
 RUN \
   if [ "$version" = "latest" ]; then version=$(curl -s https://api.github.com/repos/$owner/MusicBot/releases/latest | grep "tag_name" | cut -d '"' -f 4); fi && \
-  wget https://github.com/$owner/MusicBot/releases/download/$version/JMusicBot-$version.jar -O /JMusicBot.jar
+  wget https://github.com/$owner/MusicBot/releases/download/v$version/JMusicBot-$version.jar -O /JMusicBot.jar
 
-FROM openjdk:11-jre AS runner
+FROM ibmjava:8-jre AS runner
 WORKDIR /data
 
 # make an empty Playlists folder
