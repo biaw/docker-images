@@ -21,10 +21,10 @@ jobs:
         id: get-branch-names
         run: |
           git fetch --all --prune --tags
-          echo "::set-output name=branch-names::$(git branch -r --format='%(refname:short)' | grep -v HEAD | grep -v main | sed 's/origin\///' | jq -R -s -c 'split("\n")[:-1]')"
+          echo "::set-output name=branch-names::$(git branch -r --format='%(refname:short)' | grep -v '^origin/' | grep -v HEAD | grep -v main | sed 's#^[^/]*/##' | jq -R -s -c 'split("\n")[:-1]')"
 
   build-docker-image:
-    name: ghcr.io/promise/${{ matrix.branch }}
+    name: ghcr.io/biaw/${{ matrix.branch }}
     runs-on: ubuntu-latest
     needs: list-branches
 
@@ -51,4 +51,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/promise/${{ matrix.branch }}:latest
+          tags: ghcr.io/biaw/${{ matrix.branch }}:latest
