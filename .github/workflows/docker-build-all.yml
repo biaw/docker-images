@@ -21,13 +21,18 @@ jobs:
         id: get-branch-names
         run: |
           git fetch --all --prune --tags
-          echo "::set-output name=branch-names::$(git branch -r --format='%(refname:short)' \
+          branches=$(git branch -r --format='%(refname:short)' \
             | sed 's#^[^/]*/##' \
             | grep -v -x 'origin' \
             | grep -v -x 'HEAD' \
             | grep -v -x 'main' \
-            | sort -u \
-            | jq -R -s -c 'split(\"\\n\")[:-1]')"
+            | sort -u)
+          if [ -z "$branches" ]; then
+            echo "branch-names=[]" >> $GITHUB_OUTPUT
+          else
+            json=$(printf '%s\n' "$branches" | jq -R -s -c 'split("\n")[:-1]')
+            echo "branch-names=$json" >> $GITHUB_OUTPUT
+          fi
 
   build-docker-image:
     name: ghcr.io/biaw/${{ matrix.branch }}
